@@ -1,6 +1,5 @@
 import React from 'react';
 import Boxes from '../../components/Box/Boxes';
-import $ from 'jquery';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 import ItemStore from '../../stores/ItemStore';
 
