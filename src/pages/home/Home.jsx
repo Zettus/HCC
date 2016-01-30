@@ -1,0 +1,41 @@
+import React from 'react';
+import Boxes from '../../components/Box/Boxes';
+import $ from 'jquery';
+import { connectToStores, provideContext } from 'fluxible-addons-react';
+import ItemStore from '../../stores/ItemStore';
+
+import getItemsStateAction from '../../actions/GetItemsStateAction';
+import loadConfigAction from '../../actions/loadConfigAction';
+import connectWebSocketsAction from '../../actions/connectWebsocketsAction';
+
+import executeMultiple from 'fluxible-action-utils/async/executeMultiple';
+
+import '../../app.scss';
+
+@connectToStores([ItemStore], (context) => ({
+    items: context.getStore(ItemStore).getItems()
+}))
+export default class Home extends React.Component {
+
+    constructor(props, context) {
+        super(props, context);
+        this.socket = $.atmosphere;
+    }
+
+    componentWillMount() {
+        executeMultiple(context, {
+            loadConfig: {action: loadConfigAction, isCritical: true},
+            getItemsState: ['loadConfig', {action: getItemsStateAction, isCritical: true}],
+            connectWebSocket: ['getItemsState', {action: connectWebSocketsAction}]
+        });
+    }
+
+    render() {
+
+        return (
+            <Boxes items={this.props.items}/>
+        )
+
+    }
+
+}
