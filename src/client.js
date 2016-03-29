@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import debug from 'debug';
-import { createElementWithContext } from 'fluxible-addons-react';
-import { navigateAction } from 'fluxible-router';
+import {createElementWithContext} from 'fluxible-addons-react';
+import {navigateAction} from 'fluxible-router';
 import app from './app';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -15,7 +15,7 @@ global.debugStore = debug('openHABReact:Store');
 // expose debug object to browser, so that it can be enabled/disabled from browser:
 // https://github.com/visionmedia/debug#browser-support
 window.fluxibleDebug = debug;
-localStorage.debug = '*,-Dispatchr:Action*,-navigateAction*,-Routr*,sockjs*'; //
+//localStorage.debug = '*,-Dispatchr:Action*,-navigateAction*,-Routr*,sockjs*'; //
 
 // Needed for onTouchTap
 // Can go away when react 1.0 release

@@ -1,6 +1,8 @@
-import { BaseStore } from 'fluxible/addons';
+import {BaseStore} from 'fluxible/addons';
 import _ from 'lodash';
-import { sprintf } from 'sprintf-js';
+import {getTime} from '../helper/dateTime';
+
+import {sprintf} from 'sprintf-js';
 
 class ItemStore extends BaseStore {
 
@@ -8,6 +10,7 @@ class ItemStore extends BaseStore {
         super(dispatcher);
         this.items = [];
         this.itemsConfig = [];
+        this.lastUpdate = getTime();
     }
 
     getItems() {
@@ -18,8 +21,11 @@ class ItemStore extends BaseStore {
         return this.itemsConfig;
     }
 
-    handleItemUpdated(payload) {
+    getLastUpdate() {
+        return this.lastUpdate;
+    }
 
+    handleItemUpdated(payload) {
         var filter = {'name': payload.name};
 
         if (!_.find(this.items, filter))
@@ -28,34 +34,37 @@ class ItemStore extends BaseStore {
         var item = _.find(this.items, filter);
         item.state = payload.state;
 
+        this.lastUpdate = getTime();
+
         this.emitChange();
     }
 
     handleConfigLoaded(payload) {
-
+        console.log(payload);
         this.itemsConfig = payload.items;
-
     }
 
     handleItemsLoaded(loadedItems) {
-
         this.items = [];
         let items = this.items;
 
         this.itemsConfig.forEach(configItem => {
 
-            let item = _.find(loadedItems, {'name': configItem.name});
-            if (item) {
-                $.extend(item, configItem);
+            if (configItem.boxType == 'group')
+                items.push(configItem);
+            else {
+                let item = _.find(loadedItems, {'name': configItem.name});
+                if (item) {
+                    $.extend(item, configItem);
 
-                if (configItem.format)
-                    item.state = sprintf(configItem.format, item.state);
+                    if (configItem.format)
+                        item.state = sprintf(configItem.format, item.state);
 
-                items.push(item);
+                    items.push(item);
+                }
             }
 
         });
-
         this.emitChange();
     }
 

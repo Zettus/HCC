@@ -1,13 +1,8 @@
 import React from 'react';
 
 import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
 import CardHeader from 'material-ui/lib/card/card-header';
-import CardMedia from 'material-ui/lib/card/card-media';
 import CardTitle from 'material-ui/lib/card/card-title';
-import FlatButton from 'material-ui/lib/flat-button';
-import CardText from 'material-ui/lib/card/card-text';
-import Toggle from 'material-ui/lib/toggle';
 
 import setItemStateAction from '../../actions/setItemStateAction';
 
@@ -31,12 +26,7 @@ const headerTitleStyle = {
 
 export default class Boxes extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleSwitchClick(item) {
-
         item.state = item.state === 'ON' ? 'OFF' : 'ON';
         context.executeAction(setItemStateAction, item);
     }
@@ -44,7 +34,6 @@ export default class Boxes extends React.Component {
     render() {
 
         var items = this.props.items.map((item, i) => {
-
             var titleStyle = {
                 color: '#CCC',
                 backgroundColor: '#333',
@@ -81,7 +70,8 @@ export default class Boxes extends React.Component {
             return (
                 <Card key={i} style={cardStyle} onClick={onclick} zDepth={4}>
                     <CardHeader title={item.label} titleStyle={headerTitleStyle}/>
-                    <CardTitle title={<span style={stateStyle}>{state}</span>} titleStyle={titleStyle}/></Card>
+                    <CardTitle title={<span style={stateStyle}>{state}</span>} titleStyle={titleStyle}/>
+                </Card>
             );
 
         });
@@ -89,7 +79,5 @@ export default class Boxes extends React.Component {
         return (<div>
             {items}
         </div>);
-
     }
-
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import Boxes from '../../components/Box/Boxes';
-import { connectToStores, provideContext } from 'fluxible-addons-react';
+import {connectToStores} from 'fluxible-addons-react';
 import ItemStore from '../../stores/ItemStore';
 
 import getItemsStateAction from '../../actions/GetItemsStateAction';
@@ -30,11 +30,10 @@ export default class Home extends React.Component {
     }
 
     render() {
-
         return (
-            <Boxes items={this.props.items}/>
+            <div className="home">
+                <Boxes items={this.props.items}/>
+            </div>
         )
-
     }
-
 }
