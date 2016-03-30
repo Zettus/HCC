@@ -53,7 +53,7 @@ export default class Boxes extends React.Component {
 
             let onclick, state;
 
-            switch (item.boxType) {
+            switch (item.type) {
 
                 case 'switch':
                     onclick = this.handleSwitchClick.bind(this, item);

@@ -26,7 +26,7 @@ class ItemStore extends BaseStore {
         var filter = {'name': payload.name};
         var item = _.find(this.items, filter);
         if (!item){
-            debug(`Received update for unknown item ${payload.name} - ignoring` );
+            debug(`Received update for unknown item ${payload.name} - ignoring`);
             return;
         }
         debug("Item Updated", payload.name);
@@ -42,12 +42,11 @@ class ItemStore extends BaseStore {
 
     handleItemsLoaded(loadedItems) {
         this.items = [];
-        let items = this.items;
 
         this.itemsConfig.forEach(configItem => {
 
-            if (configItem.boxType == 'group')
-                items.push(configItem);
+            if (configItem.type == 'group')
+                this.items.push(configItem);
             else {
                 let item = _.find(loadedItems, {'name': configItem.name});
                 if (item) {
@@ -56,7 +55,7 @@ class ItemStore extends BaseStore {
                     if (configItem.format)
                         item.state = sprintf(configItem.format, item.state);
 
-                    items.push(item);
+                    this.items.push(item);
                 }
             }
 
