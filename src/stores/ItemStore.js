@@ -9,13 +9,12 @@ class ItemStore extends BaseStore {
 
     constructor(dispatcher) {
         super(dispatcher);
-        this.items = [];
         this.itemsConfig = [];
         this.lastUpdate = getTime();
     }
 
     getItems() {
-        return this.items;
+        return this.itemsConfig;
     }
 
     getLastUpdate() {
@@ -24,8 +23,8 @@ class ItemStore extends BaseStore {
 
     handleItemUpdated(payload) {
         var filter = {'name': payload.name};
-        var item = _.find(this.items, filter);
-        if (!item){
+        var item = _.find(this.itemsConfig, filter);
+        if (!item) {
             debug(`Received update for unknown item ${payload.name} - ignoring`);
             return;
         }
@@ -41,28 +40,16 @@ class ItemStore extends BaseStore {
     }
 
     handleItemsLoaded(loadedItems) {
-        this.items = [];
-
         this.itemsConfig.forEach(configItem => {
-
-            if (configItem.type == 'group')
-                this.items.push(configItem);
-            else {
-                let item = _.find(loadedItems, {'name': configItem.name});
-                if (item) {
-                    $.extend(item, configItem);
-
-                    if (configItem.format)
-                        item.state = sprintf(configItem.format, item.state);
-
-                    this.items.push(item);
-                }
+            let item = _.find(loadedItems, {'name': configItem.name});
+            if (item) {
+                _.assign(configItem, item);
+                if (configItem.format)
+                    configItem.state = sprintf(configItem.format, configItem.state);
             }
-
         });
         this.emitChange();
     }
-
 }
 
 ItemStore.storeName = 'ItemStore';
