@@ -1,8 +1,9 @@
 import {BaseStore} from 'fluxible/addons';
 import _ from 'lodash';
 import {getTime} from '../helper/dateTime';
-
 import {sprintf} from 'sprintf-js';
+
+const debug = require('debug')('HCC:ItemStore');
 
 class ItemStore extends BaseStore {
 
@@ -17,30 +18,25 @@ class ItemStore extends BaseStore {
         return this.items;
     }
 
-    getItemsConfig() {
-        return this.itemsConfig;
-    }
-
     getLastUpdate() {
         return this.lastUpdate;
     }
 
     handleItemUpdated(payload) {
         var filter = {'name': payload.name};
-
-        if (!_.find(this.items, filter))
-            this.items.push(payload);
-
         var item = _.find(this.items, filter);
+        if (!item){
+            debug(`Received update for unknown item ${payload.name} - ignoring` );
+            return;
+        }
+        debug("Item Updated", payload.name);
         item.state = payload.state;
 
         this.lastUpdate = getTime();
-
         this.emitChange();
     }
 
     handleConfigLoaded(payload) {
-        console.log(payload);
         this.itemsConfig = payload.items;
     }
 
@@ -75,6 +71,6 @@ ItemStore.handlers = {
     'ITEM_UPDATED': 'handleItemUpdated',
     'ITEMS_LOADED': 'handleItemsLoaded',
     'CONFIG_LOADED': 'handleConfigLoaded'
-}
+};
 
 export default ItemStore;

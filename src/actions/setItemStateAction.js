@@ -1,6 +1,8 @@
 import request from 'superagent';
 import configStore from '../stores/ConfigStore';
 
+const debug = require('debug')('HCC:setItemStateAction');
+
 export default function setItemStateAction(context, item, done) {
 
     let config = context.getStore(configStore);
@@ -15,7 +17,7 @@ export default function setItemStateAction(context, item, done) {
             if (err || !res.ok) {
                 console.log("Error! " + err);
             } else {
-                global.debugAction('State sent successfully')
+                debug('State sent successfully')
             }
             done();
         });

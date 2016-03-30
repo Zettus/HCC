@@ -1,6 +1,6 @@
 import { BaseStore } from 'fluxible/addons';
-import _ from 'lodash';
-import { sprintf } from 'sprintf-js';
+
+const debug = require('debug')('HCC:ConfigStore');
 
 class ConfigStore extends BaseStore {
 
@@ -15,7 +15,7 @@ class ConfigStore extends BaseStore {
 
     handleConfigLoaded(payload) {
         this.openHabURL = payload.openHabURL;
-        global.debugStore('config loaded');
+        debug('config loaded');
         this.emitChange();
     }
 
@@ -24,6 +24,6 @@ class ConfigStore extends BaseStore {
 ConfigStore.storeName = 'ConfigStore';
 ConfigStore.handlers = {
     'CONFIG_LOADED': 'handleConfigLoaded'
-}
+};
 
 export default ConfigStore;

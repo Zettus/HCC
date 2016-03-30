@@ -5,7 +5,7 @@ import ItemStore from '../../stores/ItemStore';
 
 import getItemsStateAction from '../../actions/GetItemsStateAction';
 import loadConfigAction from '../../actions/loadConfigAction';
-import connectWebSocketsAction from '../../actions/connectWebsocketsAction';
+import connectWSAction from '../../actions/connectWSAction';
 
 import executeMultiple from 'fluxible-action-utils/async/executeMultiple';
 
@@ -25,7 +25,7 @@ export default class Home extends React.Component {
         executeMultiple(context, {
             loadConfig: {action: loadConfigAction, isCritical: true},
             getItemsState: ['loadConfig', {action: getItemsStateAction, isCritical: true}],
-            connectWebSocket: ['getItemsState', {action: connectWebSocketsAction}]
+            connectWebSocket: ['getItemsState', {action: connectWSAction}]
         });
     }
 
