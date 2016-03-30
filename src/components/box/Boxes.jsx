@@ -31,36 +31,31 @@ export default class Boxes extends React.Component {
         context.executeAction(setItemStateAction, item);
     }
 
+    getTitleStyle() {
+        return {
+            color: '#CCC',
+            backgroundColor: '#333',
+            textShadow: '2px 2px #111',
+            border: 'solid 1px #444',
+            borderRadius: 15,
+            display: 'flex',
+            height: 90,
+            fontSize: 30,
+            alignItems: 'center',
+            textAlign: 'center'
+        };
+    }
+
     render() {
-
         var items = this.props.items.map((item, i) => {
-            var titleStyle = {
-                color: '#CCC',
-                backgroundColor: '#333',
-                textShadow: '2px 2px #111',
-                border: 'solid 1px #444',
-                borderRadius: 15,
-                display: 'flex',
-                height: 90,
-                fontSize: 30,
-                alignItems: 'center',
-                textAlign: 'center'
-            }
-
-            var stateStyle = {
-                width: '100%'
-            }
-
+            let titleStyle = this.getTitleStyle(), stateStyle = {width: '100%'};
             let onclick, state;
-
             switch (item.type) {
-
-                case 'switch':
+                case 'SwitchItem':
                     onclick = this.handleSwitchClick.bind(this, item);
                     state = <i className="material-icons md-48">power_settings_new</i>;
-                    if (item.state === 'ON') {
+                    if (item.state === 'ON')
                         titleStyle.backgroundColor = '#228855';
-                    }
                     break;
 
                 default:

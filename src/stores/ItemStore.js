@@ -22,14 +22,14 @@ class ItemStore extends BaseStore {
     }
 
     handleItemUpdated(payload) {
-        var filter = {'name': payload.name};
-        var item = _.find(this.itemsConfig, filter);
+        let filter = {'name': payload.name};
+        let item = _.find(this.itemsConfig, filter);
         if (!item) {
             debug(`Received update for unknown item ${payload.name} - ignoring`);
             return;
         }
         debug("Item Updated", payload.name);
-        item.state = payload.state;
+        item.state = item.format ? sprintf(item.format, payload.state) : payload.state;
 
         this.lastUpdate = getTime();
         this.emitChange();
@@ -46,6 +46,7 @@ class ItemStore extends BaseStore {
                 _.assign(configItem, item);
                 if (configItem.format)
                     configItem.state = sprintf(configItem.format, configItem.state);
+                debug("item loaded", configItem);
             }
         });
         this.emitChange();
