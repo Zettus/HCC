@@ -2,7 +2,8 @@ import React from 'react';
 import Card from 'material-ui/lib/card/card';
 import CardHeader from 'material-ui/lib/card/card-header';
 import CardTitle from 'material-ui/lib/card/card-title';
-import { cardStyle, headerTitleStyle, cardTitleStyle, stateStyle } from './CardStyles';
+import StateVisualizer from "../visualizer/StateVisualizer";
+import { cardStyle, headerTitleStyle, cardTitleStyle } from './CardStyles';
 
 const propTypes = {
     item: React.PropTypes.object.isRequired
@@ -16,7 +17,7 @@ export class SensorCard extends React.Component {
         return (
             <Card style={cardStyle} zDepth={4}>
                 <CardHeader title={item.label} titleStyle={headerTitleStyle}/>
-                <CardTitle title={<span style={stateStyle}>{item.state}</span>} titleStyle={cardTitleStyle}/>
+                <CardTitle title={<StateVisualizer item={item} />} titleStyle={cardTitleStyle}/>
             </Card>
         );
     }

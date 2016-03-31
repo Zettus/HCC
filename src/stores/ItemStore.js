@@ -1,7 +1,6 @@
 import {BaseStore} from 'fluxible/addons';
 import _ from 'lodash';
 import {getTime} from '../helper/dateTime';
-import {sprintf} from 'sprintf-js';
 
 const debug = require('debug')('HCC:ItemStore');
 
@@ -29,7 +28,7 @@ class ItemStore extends BaseStore {
             return;
         }
         debug("Item Updated", payload.name);
-        item.state = item.format ? sprintf(item.format, payload.state) : payload.state;
+        item.state = payload.state;
 
         this.lastUpdate = getTime();
         this.emitChange();
@@ -37,6 +36,12 @@ class ItemStore extends BaseStore {
 
     handleConfigLoaded(payload) {
         this.itemsConfig = payload.items;
+        this.itemsConfig.forEach(item => {
+           if (item.thresholds) {
+               item.thresholds = _.orderBy(item.thresholds, ['threshold'], ['desc']);
+               console.log(item.thresholds);
+           }
+        });
     }
 
     handleItemsLoaded(loadedItems) {
@@ -44,8 +49,6 @@ class ItemStore extends BaseStore {
             let item = _.find(loadedItems, {'name': configItem.name});
             if (item) {
                 _.assign(configItem, item);
-                if (configItem.format)
-                    configItem.state = sprintf(configItem.format, configItem.state);
                 debug("item loaded", configItem);
             }
         });

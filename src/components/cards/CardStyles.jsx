@@ -1,11 +1,11 @@
 export const cardStyle = {
-        height: 200,
-        width: 200,
-        margin: 15,
-        borderRadius: 10,
-        border: 'solid 1px #444',
-        display: 'inline-block',
-        cursor: 'pointer'
+    height: 200,
+    width: 200,
+    margin: 15,
+    borderRadius: 10,
+    border: 'solid 1px #444',
+    display: 'inline-block',
+    cursor: 'pointer'
 };
 
 export const headerTitleStyle = {
@@ -14,8 +14,7 @@ export const headerTitleStyle = {
     color: '#888'
 };
 
-export const cardTitleStyle =  {
-    color: '#CCC',
+export const cardTitleStyle = {
     backgroundColor: '#333',
     textShadow: '2px 2px #111',
     border: 'solid 1px #444',
@@ -29,4 +28,20 @@ export const cardTitleStyle =  {
 
 export const stateStyle = {
     width: '100%'
+};
+
+export const defaultStyle = {
+    color: '#ccc'
+};
+
+export const alertStyle = {
+    color: '#f00'
+};
+
+export const infoStyle = {
+    color: '#0f0'
+};
+
+export const warningStyle = {
+    color: '#E2CA0C'
 };
