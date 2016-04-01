@@ -1,10 +1,12 @@
 import React from "react";
-import {stateStyle, alertStyle, infoStyle, warningStyle, defaultStyle} from "../cards/CardStyles";
+import CardTitle from "material-ui/lib/card/card-title";
+import {stateStyle, cardTitleStyle, alertStyle, infoStyle, warningStyle, defaultStyle} from "../cards/CardStyles";
 import _ from "lodash";
 import {sprintf} from "sprintf-js";
 
 const propTypes = {
-    icon: React.PropTypes.string
+    icon: React.PropTypes.string,
+    hideState: React.PropTypes.bool
 }
 
 export class StateVisualizer extends React.Component {
@@ -21,12 +23,13 @@ export class StateVisualizer extends React.Component {
     }
 
     render() {
-        var state, stateStyleResolved = {};
+        var state, stateStyleResolved = {}, titleStyleResolved = {};
         _.assign(stateStyleResolved, stateStyle, defaultStyle);
+        _.assign(titleStyleResolved, cardTitleStyle);
 
         if (this.props.item) {
             let item = this.props.item;
-            
+
             if (item.thresholds) {
                 item.thresholds.some(t => {
                     if (item.state >= t.threshold) {
@@ -37,15 +40,17 @@ export class StateVisualizer extends React.Component {
             }
 
             if (this.props.icon)
-                state = <i className="material-icons md-48">{this.props.icon}</i>;
-            else
+                var icon = <i className="material-icons md-48">{this.props.icon}</i>;
+
+            if (!this.props.hideState)
                 state = item.format ? sprintf(item.format, item.state) : item.state;
+
+            if (item.type === 'SwitchItem' && item.state === 'ON')
+                titleStyleResolved.backgroundColor = '#228855';
         }
 
-        return (
-            <span style={stateStyleResolved}>
-                {state}
-            </span>);
+        var title = <span style={stateStyleResolved}>{icon}{state}</span>;
+        return (<CardTitle title={title} titleStyle={titleStyleResolved}/>);
     }
 }
 
