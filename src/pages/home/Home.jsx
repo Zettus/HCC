@@ -8,6 +8,9 @@ import executeMultiple from "fluxible-action-utils/async/executeMultiple";
 import getItemsStateAction from "../../actions/GetItemsStateAction";
 import loadConfigAction from "../../actions/loadConfigAction";
 import connectWSAction from "../../actions/connectWSAction";
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+
 import "../../app.scss";
 
 @connectToStores([ItemStore], (context) => ({
@@ -17,7 +20,7 @@ export default class Home extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = { items: [] };
+        this.state = {navItems: [{label: 'Home', icon:'home', items: {}}]};
     }
 
     componentWillMount() {
@@ -29,12 +32,25 @@ export default class Home extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState( { items: nextProps.items });
+        if (!this.state.items) {
+            var navItems = this.state.navItems;
+            navItems[0].items = nextProps.items;
+            this.setState({items: nextProps.items, navItems: navItems});
+        }
+    }
+
+    handleNavClick(e){
+        var navItems = this.state.navItems;
+        navItems.splice(navItems.indexOf(e) + 1, navItems.length);
+        this.setState({items: e.items, navItems: navItems});
     }
 
     handleClick(item) {
-        if (item.items)
-            this.setState( {items: item.items} );
+        if (item.items) {
+            var navItems = this.state.navItems;
+            navItems.push({label: item.label, items: item.items});
+            this.setState({items: item.items, navItems: navItems});
+        }
     }
 
     render() {
@@ -43,18 +59,22 @@ export default class Home extends React.Component {
             var items = this.state.items.map((item, i) => {
                 switch (item.type) {
                     case 'Group':
-                        return <GroupCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)} />;
+                        return <GroupCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)}/>;
                     case 'SwitchItem':
-                        return <SwitchCard key={i} item={item} />;
+                        return <SwitchCard key={i} item={item}/>;
                     default:
-                        return <SensorCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)} />;
+                        return <SensorCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)}/>;
                 }
             });
         }
 
         return (
-            <div className="home">
-                {items}
+            <div>
+                <Header navItems={this.state.navItems} onNavClick={this.handleNavClick.bind(this)} />
+                <div className="home">
+                    {items}
+                </div>
+                <Footer />
             </div>
         )
     }

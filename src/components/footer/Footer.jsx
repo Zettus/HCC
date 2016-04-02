@@ -4,6 +4,8 @@ import ToolbarTitle from 'material-ui/lib/toolbar/toolbar-title';
 import ToolbarGroup from 'material-ui/lib/toolbar/toolbar-group';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 import ItemStore from '../../stores/ItemStore';
+import Clock from '../clock/Clock';
+import ToolbarComponent from '../toolbar/ToolbarComponent';
 
 const appBarStyle = {
     backgroundColor: 'rgba(48, 48, 48, 0.39)',
@@ -26,10 +28,14 @@ export default class Footer extends React.Component {
 
     render() {
 
+        let clock = <Clock />
         let lastUpdateText = `Last Update: ${this.props.lastUpdate}`;
         
         return (
             <Toolbar style={appBarStyle}>
+                <ToolbarGroup float="left">
+                    <ToolbarComponent content={clock} style={toolbarTitleStyle}/>
+                </ToolbarGroup>
                 <ToolbarGroup float="right">
                    <ToolbarTitle text={lastUpdateText} style={toolbarTitleStyle} />
                 </ToolbarGroup>
