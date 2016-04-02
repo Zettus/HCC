@@ -5,7 +5,8 @@ import StateVisualizer from "../visualizer/StateVisualizer";
 import {cardStyle, headerTitleStyle} from "./CardStyles";
 
 const propTypes = {
-    item: React.PropTypes.object.isRequired
+    item: React.PropTypes.object.isRequired,
+    onCardClick: React.PropTypes.func
 }
 
 export class SensorCard extends React.Component {
@@ -14,7 +15,7 @@ export class SensorCard extends React.Component {
         let item = this.props.item;
 
         return (
-            <Card style={cardStyle} zDepth={4}>
+            <Card style={cardStyle} zDepth={4} onClick={this.props.onCardClick}>
                 <CardHeader title={item.label} titleStyle={headerTitleStyle}/>
                 <StateVisualizer item={item}/>
             </Card>

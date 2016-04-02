@@ -50,7 +50,6 @@ class ItemStore extends BaseStore {
     }
 
     handleItemsLoaded(loadedItems) {
-        var itemsConfig = this.itemsConfig;
         function updateItem(item) {
             let loadedItem = _.find(loadedItems, {'name': item.name});
             if (loadedItem)
@@ -62,15 +61,16 @@ class ItemStore extends BaseStore {
         }
 
         function updateItems(items) {
-            if (!items) items = itemsConfig;
             items.forEach(configItem => {
-                if (configItem.stateGroup || configItem.items)
+                if (configItem.stateGroup)
                     updateItems(configItem.stateGroup);
                 if (configItem.name)
                     updateItem(configItem);
+                if (configItem.items)
+                    updateItems(configItem.items);
             });
         }
-        updateItems();
+        updateItems(this.itemsConfig);
         this.emitChange();
     }
 }

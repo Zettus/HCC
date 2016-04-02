@@ -55,7 +55,7 @@ export class StateVisualizer extends React.Component {
                         this.applyThresholdStyle(stateItem, itemStyle, stateItem.state);
                         console.log(itemStyle);
                         return (
-                            <div
+                            <div key={i}
                                 style={i < item.stateGroup.length -1 ? styles.cardTitleRowStyleSmall : styles.cardTitleLastRowStyleSmall}>
                                 <span style={styles.cardTitleRowLabelSmall}>{stateItem.label}</span>
                                 <span style={itemStyle}>{this.getFormattedState(stateItem)}</span>

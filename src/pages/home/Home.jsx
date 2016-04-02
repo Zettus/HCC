@@ -17,7 +17,7 @@ export default class Home extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.handleClick = this.handleClick.bind(this);
+        this.state = { items: [] };
     }
 
     componentWillMount() {
@@ -28,21 +28,26 @@ export default class Home extends React.Component {
         });
     }
 
-    handleClick() {
-        // TODO: navigation handling
+    componentWillReceiveProps(nextProps) {
+        this.setState( { items: nextProps.items });
+    }
+
+    handleClick(item) {
+        if (item.items)
+            this.setState( {items: item.items} );
     }
 
     render() {
 
-        if (this.props.items) {
-            var items = this.props.items.map((item, i) => {
+        if (this.state.items) {
+            var items = this.state.items.map((item, i) => {
                 switch (item.type) {
                     case 'Group':
-                        return <GroupCard key={i} item={item} onClick={this.handleClick} />;
+                        return <GroupCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)} />;
                     case 'SwitchItem':
                         return <SwitchCard key={i} item={item} />;
                     default:
-                        return <SensorCard key={i} item={item} />;
+                        return <SensorCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)} />;
                 }
             });
         }
