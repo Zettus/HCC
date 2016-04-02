@@ -26,22 +26,15 @@ export const cardTitleStyle = {
     textAlign: 'center'
 };
 
-export const stateStyle = {
-    width: '100%'
-};
+export const cardTitleStyleSmall = {fontSize: 20, lineHeight: '43px'};
+export const cardTitleRowStyleSmall = {borderBottom: 'solid 1px #555', height: '50%'};
+export const cardTitleRowLabelSmall = {fontSize: 13, textTransform: 'uppercase', float: 'left', marginLeft: '8px', color: '#ccc'};
+export const cardTitleLastRowStyleSmall = {border: 'none'};
+export const stateStyleSmall = {width: 'initial', float: 'right', marginRight: '8px'};
 
-export const defaultStyle = {
-    color: '#ccc'
-};
+export const stateStyle = {width: '100%', textAlign: 'center'};
 
-export const alertStyle = {
-    color: '#f00'
-};
-
-export const infoStyle = {
-    color: '#0f0'
-};
-
-export const warningStyle = {
-    color: '#E2CA0C'
-};
+export const defaultStyle = {color: '#ccc'};
+export const alertStyle = {color: '#f00'};
+export const infoStyle = {color: '#0f0'};
+export const warningStyle = {color: '#E2CA0C'};

@@ -20,45 +20,64 @@ class ItemStore extends BaseStore {
         return this.lastUpdate;
     }
 
-    handleItemUpdated(payload) {
-        let filter = {'name': payload.name};
-        let item = _.find(this.itemsConfig, filter);
-        if (!item) {
-            debug(`Received update for unknown item ${payload.name} - ignoring`);
-            return;
-        }
-        debug("Item Updated", payload.name);
-        item.state = payload.state;
-
-        this.lastUpdate = getTime();
-        this.emitChange();
+    getAllItems(items) {
+        var sensors = [];
+        if (!items) items = this.itemsConfig;
+        items.forEach(i => {
+            sensors.push.apply(sensors, i.sensors);
+            if (i.items)
+                sensors.push.apply(sensors, this.getAllItems(i.items));
+            if (i.name)
+                sensors.push(i);
+        })
+        return sensors;
     }
 
     handleConfigLoaded(payload) {
         this.itemsConfig = payload.items;
-        this.itemsConfig.forEach(item => {
-           if (item.thresholds) {
-               item.thresholds = _.orderBy(item.thresholds, ['threshold'], ['desc']);
-               console.log(item.thresholds);
-           }
+    }
+
+    handleItemUpdated(updatedItem) {
+        var items = this.getAllItems();
+        items.forEach(item => {
+            if (item.name === updatedItem.name) {
+                item.state = updatedItem.state;
+                debug("Item Updated", updatedItem.name);
+            }
         });
+        this.lastUpdate = getTime();
+        this.emitChange();
     }
 
     handleItemsLoaded(loadedItems) {
-        this.itemsConfig.forEach(configItem => {
-            let item = _.find(loadedItems, {'name': configItem.name});
-            if (item) {
-                _.assign(configItem, item);
-                debug("item loaded", configItem);
+        var itemsConfig = this.itemsConfig;
+        function updateItem(item) {
+            let loadedItem = _.find(loadedItems, {'name': item.name});
+            if (loadedItem)
+                _.assign(item, loadedItem);
+            if (item.thresholds) {
+                item.thresholds = _.orderBy(item.thresholds, ['threshold'], ['desc']);
             }
-        });
+            debug("item loaded", item);
+        }
+
+        function updateItems(items) {
+            if (!items) items = itemsConfig;
+            items.forEach(configItem => {
+                if (configItem.stateGroup || configItem.items)
+                    updateItems(configItem.stateGroup);
+                if (configItem.name)
+                    updateItem(configItem);
+            });
+        }
+        updateItems();
         this.emitChange();
     }
 }
 
 ItemStore.storeName = 'ItemStore';
 ItemStore.handlers = {
-    'ITEM_UPDATED': 'handleItemUpdated',
+    "ITEM_UPDATED": 'handleItemUpdated',
     'ITEMS_LOADED': 'handleItemsLoaded',
     'CONFIG_LOADED': 'handleConfigLoaded'
 };

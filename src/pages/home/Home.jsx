@@ -35,15 +35,14 @@ export default class Home extends React.Component {
     render() {
 
         if (this.props.items) {
-            var items = this.props.items.map(item => {
-
+            var items = this.props.items.map((item, i) => {
                 switch (item.type) {
                     case 'Group':
-                        return <GroupCard key={item.name} item={item} onClick={this.handleClick} />;
+                        return <GroupCard key={i} item={item} onClick={this.handleClick} />;
                     case 'SwitchItem':
-                        return <SwitchCard key={item.name} item={item} />;
+                        return <SwitchCard key={i} item={item} />;
                     default:
-                        return <SensorCard key={item.name} item={item} />;
+                        return <SensorCard key={i} item={item} />;
                 }
             });
         }
