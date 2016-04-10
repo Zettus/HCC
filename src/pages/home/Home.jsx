@@ -4,24 +4,20 @@ import ItemStore from "../../stores/ItemStore";
 import SensorCard from "../../components/cards/SensorCard";
 import SwitchCard from "../../components/cards/SwitchCard";
 import GroupCard from "../../components/cards/GroupCard";
+import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 import executeMultiple from "fluxible-action-utils/async/executeMultiple";
 import getItemsStateAction from "../../actions/GetItemsStateAction";
 import loadConfigAction from "../../actions/loadConfigAction";
 import connectWSAction from "../../actions/connectWSAction";
-import Header from '../../components/Header/Header';
-import Footer from '../../components/Footer/Footer';
-
+import navigateAction from "../../actions/navigateAction";
 import "../../app.scss";
 
 @connectToStores([ItemStore], (context) => ({
-    items: context.getStore(ItemStore).getItems()
+    navItems: context.getStore(ItemStore).getNavItems(),
+    currentItem: context.getStore(ItemStore).getCurrentItem()
 }))
 export default class Home extends React.Component {
-
-    constructor(props, context) {
-        super(props, context);
-        this.state = {navItems: [{label: 'Home', icon:'home', items: {}}]};
-    }
 
     componentWillMount() {
         executeMultiple(context, {
@@ -31,32 +27,22 @@ export default class Home extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!this.state.items) {
-            var navItems = this.state.navItems;
-            navItems[0].items = nextProps.items;
-            this.setState({items: nextProps.items, navItems: navItems});
-        }
-    }
-
-    handleNavClick(e){
-        var navItems = this.state.navItems;
-        navItems.splice(navItems.indexOf(e) + 1, navItems.length);
-        this.setState({items: e.items, navItems: navItems});
+    handleNavClick(item) {
+        context.executeAction(navigateAction, {navItem: item, drillDown: false});
     }
 
     handleClick(item) {
         if (item.items) {
-            var navItems = this.state.navItems;
-            navItems.push({label: item.label, items: item.items});
-            this.setState({items: item.items, navItems: navItems});
+            context.executeAction(navigateAction, {navItem: item, drillDown: true});
         }
     }
 
     render() {
 
-        if (this.state.items) {
-            var items = this.state.items.map((item, i) => {
+        let items = this.props.currentItem.items;
+        
+        if (items) {
+            var renderedItems = items.map((item, i) => {
                 switch (item.type) {
                     case 'Group':
                         return <GroupCard key={i} item={item} onCardClick={this.handleClick.bind(this, item)}/>;
@@ -70,9 +56,9 @@ export default class Home extends React.Component {
 
         return (
             <div>
-                <Header navItems={this.state.navItems} onNavClick={this.handleNavClick.bind(this)} />
+                <Header navItems={this.props.navItems} onNavClick={this.handleNavClick.bind(this)}/>
                 <div className="home">
-                    {items}
+                    {renderedItems}
                 </div>
                 <Footer />
             </div>

@@ -10,10 +10,7 @@ class ItemStore extends BaseStore {
         super(dispatcher);
         this.itemsConfig = [];
         this.lastUpdate = getTime();
-    }
-
-    getItems() {
-        return this.itemsConfig;
+        this.navItems = [{label: 'Home', icon: 'home', items: []}];
     }
 
     getLastUpdate() {
@@ -33,8 +30,17 @@ class ItemStore extends BaseStore {
         return sensors;
     }
 
+    getNavItems() {
+        return this.navItems;
+    }
+
+    getCurrentItem() {
+        return this.navItems[this.navItems.length - 1];
+    }
+    
     handleConfigLoaded(payload) {
         this.itemsConfig = payload.items;
+        this.navItems[0].items = payload.items
     }
 
     handleItemUpdated(updatedItem) {
@@ -73,13 +79,25 @@ class ItemStore extends BaseStore {
         updateItems(this.itemsConfig);
         this.emitChange();
     }
+
+    handleNavigationUp(item) {
+        this.navItems.splice(this.navItems.indexOf(item) + 1, this.navItems.length);
+        this.emitChange();
+    }
+
+    handleNavigationDown(item) {
+        this.navItems.push(item);
+        this.emitChange();
+    }
 }
 
 ItemStore.storeName = 'ItemStore';
 ItemStore.handlers = {
     "ITEM_UPDATED": 'handleItemUpdated',
     'ITEMS_LOADED': 'handleItemsLoaded',
-    'CONFIG_LOADED': 'handleConfigLoaded'
+    'CONFIG_LOADED': 'handleConfigLoaded',
+    'NAV_UP': 'handleNavigationUp',
+    'NAV_DOWN': 'handleNavigationDown'
 };
 
 export default ItemStore;
