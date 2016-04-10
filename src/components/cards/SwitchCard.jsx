@@ -1,8 +1,7 @@
 import React from "react";
 import Card from "material-ui/lib/card/card";
 import CardHeader from "material-ui/lib/card/card-header";
-import setItemStateAction from "../../actions/setItemStateAction";
-import StateVisualizer from "../visualizer/StateVisualizer";
+import SwitchVisualizer from "../visualizer/SwitchItemVisualizer";
 import {cardStyle, headerTitleStyle} from "./CardStyles";
 
 const propTypes = {
@@ -11,18 +10,13 @@ const propTypes = {
 
 export class SwitchCard extends React.Component {
 
-    handleClick(item) {
-        item.state = item.state === 'ON' ? 'OFF' : 'ON';
-        context.executeAction(setItemStateAction, item);
-    }
-
     render() {
         let item = this.props.item;
 
         return (
-            <Card style={cardStyle} onClick={this.handleClick.bind(this, item)} zDepth={4}>
+            <Card style={cardStyle} zDepth={4}>
                 <CardHeader title={item.label} titleStyle={headerTitleStyle}/>
-                <StateVisualizer item={item} icon="power_settings_new" hideState={true} />
+                <SwitchVisualizer item={item} icon="power_settings_new"  />
             </Card>
         );
     }

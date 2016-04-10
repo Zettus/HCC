@@ -5,7 +5,7 @@
   "main": "start.js",
   "scripts": {
     "build": "webpack & webpack --config webpack.config.production.js",
-    "dev": "webpack-dev-server --config webpack.config.js --hot --inline ",
+    "dev": "webpack-dev-server --config webpack.config.js --hot --inline --host 0.0.0.0",
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js"
   },
@@ -28,7 +28,7 @@
     "fluxible-router": "^0.3.0",
     "font-awesome": "^4.5.0",
     "json-loader": "^0.5.4",
-    "lodash": "^4.6.1",
+    "lodash": "^4.9.0",
     "lodash-es": "^4.0.1",
     "material-ui": "^0.14.4",
     "react": "^0.14.0",

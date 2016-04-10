@@ -19,7 +19,8 @@ export default function (context) {
         transport: 'websocket',
         fallbackTransport: 'long-polling',
         timeout: 300000,
-        reconnectInterval: 5000,
+        reconnectInterval: 10000,
+        maxReconnectOnClose: 500,
         enableProtocol: true,
         headers: {'Accept': 'application/json', 'type': 'json'}
     };

@@ -3,23 +3,42 @@ import configStore from '../stores/ConfigStore';
 
 const debug = require('debug')('HCC:setItemStateAction');
 
-export default function setItemStateAction(context, item, done) {
+const debouncedFuncs = [];
 
+export default function setItemStateAction(context, payload, done) {
+
+    let {item, newState, debounced, debounceTimeout} = payload;
     let config = context.getStore(configStore);
     let url = `http://${config.getOpenHabUrl()}/rest/items/${item.name}`;
 
-    request
-        .post(url)
-        .send(item.state)
-        .set('Accept', 'text/plain')
-        .set('Content-Type', 'text/plain')
-        .end(function(err, res){
-            if (err || !res.ok) {
-                console.log("Error! " + err);
-            } else {
-                debug('State sent successfully')
-            }
-            done();
-        });
+    function sendRequest(requestUrl, requestState) {
+        request
+            .post(requestUrl)
+            .send(requestState)
+            .set('Accept', 'text/plain')
+            .set('Content-Type', 'text/plain')
+            .end(function (err, res) {
+                if (err || !res.ok) {
+                    console.log("Error! " + err);
+                } else {
+                    debug('State sent successfully', requestState)
+                }
+                done();
+            });
+    }
+
+    if (!debouncedFuncs[item.name]) {
+        debouncedFuncs[item.name] = _.debounce(function (url, state) {
+            sendRequest(url, state);
+        }, debounceTimeout ? debounceTimeout : 1000);
+    }
+
+    debouncedFuncs[item.name](url, newState);
+    if (!debounced)
+        debouncedFuncs[item.name].flush();
+
+    item.state = newState;
+    context.dispatch('ITEM_UPDATED', {item: item});
 
 }
+
