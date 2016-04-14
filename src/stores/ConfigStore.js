@@ -7,10 +7,20 @@ class ConfigStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
         this.openHabURL = {};
+        this.fullScreen = false;
     }
 
     getOpenHabUrl() {
         return this.openHabURL;
+    }
+
+    setFullScreen(value) {
+        this.fullScreen = value;
+        this.emitChange();
+    }
+
+    isFullscreen() {
+        return this.fullScreen;
     }
 
     handleConfigLoaded(payload) {
@@ -23,7 +33,8 @@ class ConfigStore extends BaseStore {
 
 ConfigStore.storeName = 'ConfigStore';
 ConfigStore.handlers = {
-    'CONFIG_LOADED': 'handleConfigLoaded'
+    'CONFIG_LOADED': 'handleConfigLoaded',
+    'SET_FULLSCREEN': 'setFullScreen'
 };
 
 export default ConfigStore;

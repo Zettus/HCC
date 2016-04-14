@@ -4,6 +4,11 @@ import {navigateAction} from 'fluxible-router';
 import app from './app';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
+import executeMultiple from "fluxible-action-utils/async/executeMultiple";
+import getItemsStateAction from "../src/actions/GetItemsStateAction";
+import loadConfigAction from "../src/actions/loadConfigAction";
+import connectWSAction from "../src/actions/connectWSAction";
+
 window.appDebug = require('debug');
 var debug = window.appDebug('HCC:client');
 
@@ -23,6 +28,12 @@ app.rehydrate(dehydratedState, (err, context) => {
     if (err) {
         throw err;
     }
+
+    executeMultiple(context, {
+        loadConfig: {action: loadConfigAction, isCritical: true},
+        getItemsState: ['loadConfig', {action: getItemsStateAction, isCritical: true}],
+        connectWebSocket: ['getItemsState', {action: connectWSAction}]
+    });
 
     context.executeAction(navigateAction, {url: location.pathname}).then(() => {
             window.context = context;

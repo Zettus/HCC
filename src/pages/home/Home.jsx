@@ -1,30 +1,29 @@
 import React from "react";
 import {connectToStores} from "fluxible-addons-react";
 import ItemStore from "../../stores/ItemStore";
+import ConfigStore from "../../stores/ConfigStore";
 import SensorCard from "../../components/cards/SensorCard";
 import SwitchCard from "../../components/cards/SwitchCard";
 import GroupCard from "../../components/cards/GroupCard";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
-import executeMultiple from "fluxible-action-utils/async/executeMultiple";
-import getItemsStateAction from "../../actions/GetItemsStateAction";
-import loadConfigAction from "../../actions/loadConfigAction";
-import connectWSAction from "../../actions/connectWSAction";
 import navigateAction from "../../actions/navigateAction";
+import setFullscreenAction from "../../actions/setFullscreenAction";
+import {enterFullscreen, exitFullscreen} from "../../helper/fullscreen";
 import "../../app.scss";
 
-@connectToStores([ItemStore], (context) => ({
+@connectToStores([ItemStore, ConfigStore], (context) => ({
     navItems: context.getStore(ItemStore).getNavItems(),
-    currentItem: context.getStore(ItemStore).getCurrentItem()
+    currentItem: context.getStore(ItemStore).getCurrentItem(),
+    isFullscreen: context.getStore(ConfigStore).isFullscreen()
 }))
 export default class Home extends React.Component {
 
-    componentWillMount() {
-        executeMultiple(context, {
-            loadConfig: {action: loadConfigAction, isCritical: true},
-            getItemsState: ['loadConfig', {action: getItemsStateAction, isCritical: true}],
-            connectWebSocket: ['getItemsState', {action: connectWSAction}]
-        });
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isFullscreen)
+            enterFullscreen(document.documentElement);
+        else
+            exitFullscreen();
     }
 
     handleNavClick(item) {
@@ -37,10 +36,14 @@ export default class Home extends React.Component {
         }
     }
 
+    handleFullscreen() {
+        context.executeAction(setFullscreenAction, {value: !this.props.isFullscreen});
+    }
+
     render() {
 
         let items = this.props.currentItem.items;
-        
+
         if (items) {
             var renderedItems = items.map((item, i) => {
                 switch (item.type) {
@@ -56,7 +59,8 @@ export default class Home extends React.Component {
 
         return (
             <div>
-                <Header navItems={this.props.navItems} onNavClick={this.handleNavClick.bind(this)}/>
+                <Header navItems={this.props.navItems} onNavClick={this.handleNavClick.bind(this)}
+                        onFullscreen={this.handleFullscreen.bind(this)}/>
                 <div className="home">
                     {renderedItems}
                 </div>

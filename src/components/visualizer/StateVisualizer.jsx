@@ -23,7 +23,7 @@ export class StateVisualizer extends React.Component {
     }
 
     getFormattedState(item) {
-        return item.format && item.state != 'Uninitialized' ? sprintf(item.format, item.state) : item.state;
+        return item.format && (item.state && item.state != 'Uninitialized') ? sprintf(item.format, item.state) : item.state;
     }
 
     applyThresholdStyle(item, destStyle, state) {

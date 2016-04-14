@@ -1,4 +1,4 @@
-import React from "react";
+import React, {PropTypes} from "react";
 import IconMenu from "material-ui/lib/menus/icon-menu";
 import IconButton from "material-ui/lib/icon-button";
 import MoreVertIcon from "material-ui/lib/svg-icons/navigation/more-vert";
@@ -9,7 +9,24 @@ import ToolbarSeparator from "material-ui/lib/toolbar/toolbar-separator";
 import ToolbarComponent from "../toolbar/ToolbarComponent";
 import * as styles from "./HeaderStyles";
 
-export default class Header extends React.Component {
+const propTypes = {
+    onFullscreen: PropTypes.func.isRequired
+}, menuItems = {
+    fullScreen: 'Toggle Fullscreen'
+}
+
+class Header extends React.Component {
+
+    constructor() {
+        super();
+        this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
+    }
+
+    handleMenuItemClick(target, element) {
+        if (element.props.primaryText == menuItems.fullScreen) {
+            this.props.onFullscreen();
+        }
+    }
 
     render() {
         var navItems = this.props.navItems.map((n, index) => {
@@ -34,9 +51,9 @@ export default class Header extends React.Component {
             <Toolbar style={styles.appBarStyle}>
                 {navItems}
                 <ToolbarGroup float="right">
-                    <IconMenu iconButtonElement={<IconButton touch={true}><MoreVertIcon  /></IconButton>}>
-                        <MenuItem primaryText="Add Item"/>
-                        <MenuItem primaryText="Do something"/>
+                    <IconMenu iconButtonElement={<IconButton touch={true}><MoreVertIcon /></IconButton>}
+                              onItemTouchTap={this.handleMenuItemClick}>
+                        <MenuItem primaryText={menuItems.fullScreen} />
                     </IconMenu>
                 </ToolbarGroup>
             </Toolbar>
@@ -45,5 +62,7 @@ export default class Header extends React.Component {
 
 }
 
+Header.propTypes = propTypes;
 
+export default Header;
 

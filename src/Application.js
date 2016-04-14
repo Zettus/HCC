@@ -1,5 +1,5 @@
 import React from 'react';
-import ApplicationStore from '../stores/ApplicationStore';
+import ApplicationStore from './stores/ApplicationStore';
 import {connectToStores, provideContext} from 'fluxible-addons-react';
 import {handleHistory} from 'fluxible-router';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
