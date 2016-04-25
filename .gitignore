@@ -2,3 +2,5 @@ node_modules
 *.log
 .idea
 config.js
+assets
+build

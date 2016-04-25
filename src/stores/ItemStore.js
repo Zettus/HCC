@@ -39,8 +39,9 @@ class ItemStore extends BaseStore {
     }
     
     handleConfigLoaded(payload) {
-        this.itemsConfig = payload.items;
-        this.navItems[0].items = payload.items
+        var obj = JSON.parse(payload);
+        this.itemsConfig = obj.items;
+        this.navItems[0].items = obj.items
     }
 
     handleItemUpdated(updatedItem) {

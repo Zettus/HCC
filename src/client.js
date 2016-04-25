@@ -1,9 +1,8 @@
-import ReactDOM from 'react-dom';
-import {createElementWithContext} from 'fluxible-addons-react';
-import {navigateAction} from 'fluxible-router';
-import app from './app';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-
+import ReactDOM from "react-dom";
+import {createElementWithContext} from "fluxible-addons-react";
+import {navigateAction} from "fluxible-router";
+import app from "./app";
+import injectTapEventPlugin from "react-tap-event-plugin";
 import executeMultiple from "fluxible-action-utils/async/executeMultiple";
 import getItemsStateAction from "../src/actions/GetItemsStateAction";
 import loadConfigAction from "../src/actions/loadConfigAction";
@@ -38,6 +37,7 @@ app.rehydrate(dehydratedState, (err, context) => {
     context.executeAction(navigateAction, {url: location.pathname}).then(() => {
             window.context = context;
             const mountNode = document.getElementById('reactContent');
+
             ReactDOM.render(
                 createElementWithContext(context),
                 mountNode,

@@ -2,17 +2,18 @@ var webpack = require('webpack');
 var path = require('path');
 
 var webpackConfig = {
+    entry: './src/client',
+    
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['', '.js', '.jsx']
     },
-    entry: [
-        './client.js'
-    ],
+    
     output: {
-        path: path.resolve('./build/js'),
-        publicPath: '/public/js/',
-        filename: 'main.min.js'
+        path: __dirname + '/build/',
+        filename: 'bundle.js',
+        publicPath: '/'
     },
+    
     module: {
         loaders: [
             {
@@ -40,8 +41,7 @@ var webpackConfig = {
                 warnings: false
             }
         })
-    ],
-    devtool: 'source-map'
+    ]
 };
 
 module.exports = webpackConfig;

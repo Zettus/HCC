@@ -1,0 +1,10 @@
+{
+  "openHabURL": "IP:8080",
+  "items": [
+    {
+      "name": "Dummy",
+      "label": "Dummy",
+      "format": "%i %%"
+    }
+  ]
+}
