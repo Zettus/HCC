@@ -15,8 +15,8 @@ export default function setItemStateAction(context, payload, done) {
         request
             .post(requestUrl)
             .send(requestState)
-            .set('Accept', 'text/plain')
-            .set('Content-Type', 'text/plain')
+            .accept('text/plain')
+            .type('text/plain')
             .end(function (err, res) {
                 if (err || !res.ok) {
                     console.log("Error! " + err);

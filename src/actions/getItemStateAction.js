@@ -8,7 +8,7 @@ export default function (context, item, done) {
 
     request
         .get(url)
-        .set('Accept', 'application/json')
+        .accept('application/json')
         .end(function (err, res) {
             if (err || !res.ok) {
                 console.log("Error! " + err);

@@ -24,8 +24,7 @@ class ConfigStore extends BaseStore {
     }
 
     handleConfigLoaded(payload) {   
-        var obj = JSON.parse(payload);
-        this.openHabURL = obj.openHabURL;
+        this.openHabURL = payload.openHabURL;
         debug('config loaded');
         this.emitChange();
     }

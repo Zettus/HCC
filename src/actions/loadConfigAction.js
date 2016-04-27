@@ -6,12 +6,12 @@ export default function loadConfigAction(context, payload, done) {
 
     request
         .get(url)
-        .set('Accept', 'application/json')
+        .accept('application/json')
         .end(function (err, res) {
             if (err || !res.ok) {
                 console.log("Error! " + err);
             } else {
-                context.dispatch('CONFIG_LOADED', res.text);
+                context.dispatch('CONFIG_LOADED', res.body);
             }
             done();
         });

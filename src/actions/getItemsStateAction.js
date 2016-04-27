@@ -8,11 +8,12 @@ export default function GetItemsStateAction(context, payload, done) {
 
     request
         .get(url)
-        .set('Accept', 'application/json')
+        .accept('application/json')
         .end(function(err, res){
             if (err || !res.ok) {
                 console.log("Error! " + err);
             } else {
+                console.log(res.body.item);
                 context.dispatch('ITEMS_LOADED', res.body.item);
             }
             done();
