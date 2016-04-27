@@ -17,7 +17,7 @@ export default class Clock extends React.Component {
     render() {
         return (
             <div>
-                <span>{this.state.day}</span>&emsp;<span>{this.state.time}</span>
+                <span>{this.state.day}</span> - <span>{this.state.time}</span>
             </div>
         );
     }
