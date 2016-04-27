@@ -1,4 +1,6 @@
 import configStore from '../stores/ConfigStore';
+import $ from 'jquery';
+import atmosphere from "../../assets/scripts/atmosphere";
 
 const debug = require('debug')('HCC:connectWSAction');
 

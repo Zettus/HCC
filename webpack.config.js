@@ -1,46 +1,28 @@
 var webpack = require('webpack');
 var path = require('path');
-var production = process.env.NODE_ENV === 'production';
 var ExtractPlugin = require('extract-text-webpack-plugin');
-
-function getPlugins() {
-
-    var plugins = [
-        new ExtractPlugin('bundle.css'), // <=== where should content be piped
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            filename: 'vendor.bundle.js',
-            minChunks: Infinity
-        })
-    ];
-
-    if (process.env.NODE_ENV === 'production') {
-        plugins.push(new webpack.optimize.DedupePlugin());
-        plugins.push(new webpack.optimize.UglifyJsPlugin(
-            {
-                mangle: true,
-                compress: {
-                    warnings: false
-                }
-            }
-        ));
-    }
-    return plugins;
-}
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var webpackConfig = {
 
-    debug: !production,
-
-    devtool: production ? false : 'source-map',
-
+    debug: true,
+    devtool: 'eval-source-map',
     entry: {
-        bundle: './src/client',
-        vendor: ['babel-polyfill', 'lodash', 'superagent', 'react', 'react-dom', 'fluxible', 'fluxible-router', 'fluxible-action-utils', 'fluxible-addons-react']
+        bundle: './src/client'
     },
 
-    plugins: getPlugins(),
+    plugins: [
+        new HtmlWebpackPlugin({
+            inject: false,
+            template: 'node_modules/html-webpack-template/index.ejs',
+            appMountId: 'reactContent',
+            mobile: true,
+            title: 'HCC',
+            hash: true
+        }),
+        new ExtractPlugin('bundle.css'),
+        new webpack.optimize.OccurenceOrderPlugin()
+    ],
 
     resolve: {
         extensions: ['', '.js', '.jsx']
@@ -52,12 +34,12 @@ var webpackConfig = {
         publicPath: '/'
     },
 
-    module : {
-        loaders : [
+    module: {
+        loaders: [
             {
                 test: /\.jsx?$/,
-                exclude: /(node_modules|bower_components)/,
-                loader : 'babel-loader'
+                exclude: /(node_modules|bower_components|assets)/,
+                loader: 'babel-loader'
             },
             {
                 test: /\.scss$/,
@@ -65,32 +47,12 @@ var webpackConfig = {
                 loader: ExtractPlugin.extract('style', 'css!sass!autoprefixer-loader')
             },
             {
-                test: /\.(png|gif|jpe?g|svg)$/i,
-                loader: 'url?limit=10000'
-            },
-            {
-                test: /\.html/,
-                loader: 'html',
-            },
-            {
-                test: /\.json/,
-                loader: 'json-loader',
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                loader: 'file?name=fonts/[name].[ext]'
             }
         ]
     },
 
-    // module: {
-    //     loaders: [
-    //         {
-    //             test: /\.(js|jsx)/,
-    //             loader: 'babel-loader',
-    //             exclude: /node_modules/,
-    //         },
-
-
-   
-    //     ],
-    // },
     devServer: {
         hot: true,
         stats: 'errors-only',
